@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YOUMATTER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Anti-flicker script to apply theme before React loads
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+
+      tailwind.config = {
+        darkMode: 'class', // Enable class-based dark mode
+        theme: {
+          extend: {
+            colors: {
+              primary: '#8B5CF6',
+              'primary-focus': '#7C3AED',
+              'primary-content': '#ffffff',
+              secondary: '#F471B5',
+              'secondary-focus': '#EC4899',
+              accent: '#34D399',
+              'accent-focus': '#10B981',
+              neutral: '#3D4451',
+              'base-100': '#F9FAFB',
+              'base-200': '#F3F4F6',
+              'base-300': '#E5E7EB',
+              info: '#3ABFF8',
+              success: '#36D399',
+              warning: '#FBBD23',
+              error: '#F87272',
+            },
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+            },
+            animation: {
+                'fade-in': 'fadeIn 0.5s ease-out',
+                'slide-in-up': 'slideInUp 0.5s ease-out',
+            },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: 0 },
+                    '100%': { opacity: 1 },
+                },
+                slideInUp: {
+                    '0%': { transform: 'translateY(20px)', opacity: 0 },
+                    '100%': { transform: 'translateY(0)', opacity: 1 },
+                },
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.1",
+    "recharts": "https://aistudiocdn.com/recharts@^3.2.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-base-100 dark:bg-gray-900 transition-colors duration-300">
+    <div id="root"></div>
+  </body>
+</html>
