@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 
 type Theme = 'light' | 'dark';
@@ -9,7 +10,8 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+// Fix: Use React.PropsWithChildren to correctly type the component with children, resolving the TypeScript error.
+export const ThemeProvider = ({ children }: React.PropsWithChildren) => {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
       const storedTheme = localStorage.getItem('theme') as Theme | null;

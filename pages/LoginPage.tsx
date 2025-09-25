@@ -1,10 +1,122 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
 
 export const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const [authType, setAuthType] = useState<'login' | 'register'>('login');
+  
+  // Form state
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+    const result = await login(username, password);
+    if (!result.success) {
+      setError(result.message || 'An unknown error occurred.');
+    }
+    setIsLoading(false);
+    // On success, the App component will handle the redirect
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!name || !username || !password || !age || !phoneNumber) {
+      setError("Please fill out all fields.");
+      return;
+    }
+    setIsLoading(true);
+    const result = await register({ name, username, password, age: parseInt(age), phoneNumber });
+    if (!result.success) {
+      setError(result.message || 'An unknown error occurred.');
+    }
+    setIsLoading(false);
+  };
+
+  const resetFormFields = () => {
+    setUsername('');
+    setPassword('');
+    setName('');
+    setAge('');
+    setPhoneNumber('');
+    setError(null);
+  };
+
+  const toggleAuthType = (type: 'login' | 'register') => {
+    setAuthType(type);
+    resetFormFields();
+  };
+
+  const renderLoginForm = () => (
+    <form onSubmit={handleLogin} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+        <input 
+          type="text" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+          placeholder="yourusername" 
+          required
+          className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" 
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+        <input 
+          type="password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••" 
+          required
+          className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" 
+        />
+      </div>
+      <Button type="submit" fullWidth disabled={isLoading}>
+        {isLoading ? 'Logging In...' : 'Login'}
+      </Button>
+    </form>
+  );
+
+  const renderRegisterForm = () => (
+    <form onSubmit={handleRegister} className="space-y-4">
+       <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex Doe" required className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
+      </div>
+       <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="alexd" required className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Age</label>
+            <input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="18" required className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
+        </div>
+        <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
+            <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="123-456-7890" required className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
+      </div>
+      <Button type="submit" fullWidth disabled={isLoading}>
+        {isLoading ? 'Creating Account...' : 'Register'}
+      </Button>
+    </form>
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 dark:bg-gray-900">
@@ -13,37 +125,18 @@ export const LoginPage: React.FC = () => {
           YOUMATTER
         </h1>
         <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
-          Welcome! Your safe space awaits.
+          {authType === 'login' ? 'Welcome back! Your safe space awaits.' : 'Join the community. We\'re glad you\'re here.'}
         </p>
 
         <div className="flex border border-gray-200 dark:border-gray-700 rounded-lg p-1 mb-6">
-          <button onClick={() => setAuthType('login')} className={`w-1/2 p-2 rounded-md transition ${authType === 'login' ? 'bg-primary text-white shadow' : 'text-gray-500 dark:text-gray-400'}`}>Login</button>
-          <button onClick={() => setAuthType('register')} className={`w-1/2 p-2 rounded-md transition ${authType === 'register' ? 'bg-primary text-white shadow' : 'text-gray-500 dark:text-gray-400'}`}>Register</button>
+          <button onClick={() => toggleAuthType('login')} className={`w-1/2 p-2 rounded-md transition ${authType === 'login' ? 'bg-primary text-white shadow' : 'text-gray-500 dark:text-gray-400'}`}>Login</button>
+          <button onClick={() => toggleAuthType('register')} className={`w-1/2 p-2 rounded-md transition ${authType === 'register' ? 'bg-primary text-white shadow' : 'text-gray-500 dark:text-gray-400'}`}>Register</button>
         </div>
-
-        <form className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-            <input type="email" placeholder="you@example.com" className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-            <input type="password" placeholder="••••••••" className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100" />
-          </div>
-        </form>
         
-        <div className="mt-6">
-          <p className="text-center text-xs text-gray-500 dark:text-gray-400 mb-4">For demo purposes, select a role to log in:</p>
-           <div className="grid grid-cols-2 gap-4">
-               <Button onClick={() => login('user')} fullWidth>
-                Login as User
-               </Button>
-               <Button onClick={() => login('admin')} variant="secondary" fullWidth>
-                Login as Admin
-               </Button>
-           </div>
-        </div>
-
+        {error && <p className="text-center text-sm text-error mb-4 bg-red-100 dark:bg-red-900/50 p-2 rounded-md">{error}</p>}
+        
+        {authType === 'login' ? renderLoginForm() : renderRegisterForm()}
+        
         <div className="mt-6">
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">

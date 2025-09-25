@@ -1,7 +1,7 @@
+
 import React from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './hooks/useAuth';
-import { ThemeProvider } from './hooks/useTheme';
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from './hooks/useAuth';
 import { HomePage } from './pages/HomePage';
 import { ProfilePage } from './pages/ProfilePage';
 import { OpportunitiesPage } from './pages/OpportunitiesPage';
@@ -10,6 +10,7 @@ import { LoginPage } from './pages/LoginPage';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { MobileNav } from './components/layout/MobileNav';
+import { ChatPage } from './pages/ChatPage';
 
 // Admin Imports
 import { AdminLayout } from './pages/admin/AdminLayout';
@@ -18,6 +19,8 @@ import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 
 const AppContent: React.FC = () => {
     const { isAuthenticated, user } = useAuth();
+    const location = useLocation();
+    const isChatPage = location.pathname.startsWith('/chat');
 
     if (!isAuthenticated) {
         return <LoginPage />;
@@ -25,11 +28,15 @@ const AppContent: React.FC = () => {
     
     return (
         <div className="flex flex-col min-h-screen bg-base-100 dark:bg-gray-900">
-            <Header />
-            <main className="flex-1 pb-16 md:pb-0">
+            {!isChatPage && <Header />}
+            {isChatPage && <div className="md:hidden"><Header /></div>}
+            <main className={`flex-1 ${isChatPage ? '' : 'pb-16 md:pb-0'}`}>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/chat/:conversationId" element={<ChatPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/profile/:userId" element={<ProfilePage />} />
                     <Route path="/opportunities" element={<OpportunitiesPage />} />
                     <Route path="/resources" element={<ResourcesPage />} />
                     
@@ -56,21 +63,18 @@ const AppContent: React.FC = () => {
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </main>
-            <Footer />
-            <MobileNav />
+            {!isChatPage && <Footer />}
+            {!isChatPage && <MobileNav />}
         </div>
     );
 };
 
-const App: React.FC = () => {
+const App = () => {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <HashRouter>
-            <AppContent />
-        </HashRouter>
-      </ThemeProvider>
-    </AuthProvider>
+    // Fix: Providers moved to index.tsx to resolve typing issue and for better separation.
+    <HashRouter>
+      <AppContent />
+    </HashRouter>
   );
 }
 

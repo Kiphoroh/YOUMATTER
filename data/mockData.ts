@@ -2,11 +2,12 @@
 import { User, Post, Story, Opportunity, Report, PostCategory, Mood } from '../types';
 
 export const mockUsers: User[] = [
-  { id: 'u1', name: 'Alex Doe', bio: 'Spreading positivity & tech enthusiast.', avatar: 'https://i.pravatar.cc/150?u=u1', interests: ['tech', 'music', 'hiking'], role: 'admin', points: 1250, badges: ['Pioneer', 'Top Contributor'] },
-  { id: 'u2', name: 'Jamie Smith', bio: 'Student and artist. Here to connect.', avatar: 'https://i.pravatar.cc/150?u=u2', interests: ['art', 'books', 'gaming'], role: 'user', points: 800, badges: ['Welcome'] },
-  { id: 'u3', name: 'Sam River', bio: 'Loves coding and coffee.', avatar: 'https://i.pravatar.cc/150?u=u3', interests: ['coding', 'coffee'], role: 'moderator', points: 2100, badges: ['Moderator', 'Community Helper'] },
-  { id: 'u4', name: 'Casey Jordan', bio: 'Just trying to figure things out.', avatar: 'https://i.pravatar.cc/150?u=u4', interests: ['movies', 'sports'], role: 'user', points: 350, badges: ['Welcome'] },
-  { id: 'u5', name: 'ANONYMOUS', bio: '', avatar: 'https://i.pravatar.cc/150?u=anonymous', interests: [], role: 'user', points: 0, badges: [] },
+  { id: 'u1', name: 'Alex Doe', username: 'alex', password: 'password123', age: 22, phoneNumber: '111-222-3333', bio: 'Spreading positivity & tech enthusiast.', avatar: 'https://i.pravatar.cc/150?u=u1', interests: ['tech', 'music', 'hiking'], role: 'admin', points: 1250, badges: ['Pioneer', 'Top Contributor'], isOnline: true },
+  { id: 'u2', name: 'Jamie Smith', username: 'jamie', password: 'password123', age: 19, phoneNumber: '222-333-4444', bio: 'Student and artist. Here to connect.', avatar: 'https://i.pravatar.cc/150?u=u2', interests: ['art', 'books', 'gaming'], role: 'user', points: 800, badges: ['Welcome'], isOnline: false },
+  { id: 'u3', name: 'Sam River', username: 'sam', password: 'password123', age: 24, phoneNumber: '333-444-5555', bio: 'Loves coding and coffee.', avatar: 'https://i.pravatar.cc/150?u=u3', interests: ['coding', 'coffee'], role: 'moderator', points: 2100, badges: ['Moderator', 'Community Helper'], isOnline: true },
+  { id: 'u4', name: 'Casey Jordan', username: 'casey', password: 'password123', age: 18, phoneNumber: '444-555-6666', bio: 'Just trying to figure things out.', avatar: 'https://i.pravatar.cc/150?u=u4', interests: ['movies', 'sports'], role: 'user', points: 350, badges: ['Welcome'], isOnline: false },
+  { id: 'u5', name: 'ANONYMOUS', username: 'anonymous', age: 0, phoneNumber: '', bio: '', avatar: 'https://i.pravatar.cc/150?u=anonymous', interests: [], role: 'user', points: 0, badges: [] },
+  { id: 'aura', name: 'AURA', username: 'aura', age: 1, phoneNumber: '000-000-0000', bio: 'Your empathetic AI companion, here to listen and explore thoughts with you.', avatar: 'https://i.pravatar.cc/150?u=aura', interests: ['listening', 'positivity', 'learning'], role: 'user', points: Infinity, badges: ['Companion'], isOnline: true },
 ];
 
 export const mockPosts: Post[] = [
@@ -17,9 +18,11 @@ export const mockPosts: Post[] = [
     media: 'https://picsum.photos/seed/p1/600/400',
     category: PostCategory.MentalHealth,
     likes: 128,
+    likedBy: ['u1', 'u3'],
     shares: 12,
     createdAt: '2 hours ago',
     isAnonymous: false,
+    viewedBy: ['u1', 'u3', 'u4'],
     comments: [
       { id: 'c1', author: mockUsers[0], content: 'This is amazing, Jamie! So talented.', createdAt: '1 hour ago', isAnonymous: false },
       { id: 'c2', author: mockUsers[2], content: 'Wow, I love the colors!', createdAt: '30 mins ago', isAnonymous: false },
@@ -31,9 +34,11 @@ export const mockPosts: Post[] = [
     content: 'Feeling really overwhelmed with exams lately. It feels like I\'m the only one struggling to keep up. Any advice on managing study-related anxiety?',
     category: PostCategory.Education,
     likes: 95,
+    likedBy: [],
     shares: 5,
     createdAt: '5 hours ago',
     isAnonymous: true,
+    viewedBy: ['u1', 'u2', 'u3'],
     comments: [
         { id: 'c3', author: mockUsers[2], content: 'You are definitely not alone. Taking short breaks helps me a lot!', createdAt: '4 hours ago', isAnonymous: false },
         { id: 'c4', author: mockUsers[3], content: 'I feel this. The Pomodoro technique has been a lifesaver for me.', createdAt: '3 hours ago', isAnonymous: false },
@@ -45,18 +50,20 @@ export const mockPosts: Post[] = [
     content: 'Excited to share a great article on building a resume for tech jobs! Hope this helps someone out.',
     category: PostCategory.Careers,
     likes: 72,
+    likedBy: ['u4'],
     shares: 25,
     createdAt: '1 day ago',
     isAnonymous: false,
+    viewedBy: ['u2', 'u3', 'u4'],
     comments: [],
   }
 ];
 
 export const mockStories: Story[] = [
-  { id: 's1', author: mockUsers[0], media: 'https://picsum.photos/seed/s1/300/500', createdAt: '1h ago' },
-  { id: 's2', author: mockUsers[1], media: 'https://picsum.photos/seed/s2/300/500', createdAt: '3h ago' },
-  { id: 's3', author: mockUsers[2], media: 'https://picsum.photos/seed/s3/300/500', createdAt: '8h ago' },
-  { id: 's4', author: mockUsers[3], media: 'https://picsum.photos/seed/s4/300/500', createdAt: '12h ago' },
+  { id: 's1', author: mockUsers[0], media: 'https://picsum.photos/seed/s1/300/500', createdAt: '1h ago', viewedBy: ['u2', 'u3', 'u4'] },
+  { id: 's2', author: mockUsers[1], media: 'https://picsum.photos/seed/s2/300/500', createdAt: '3h ago', viewedBy: ['u1'] },
+  { id: 's3', author: mockUsers[2], media: 'https://picsum.photos/seed/s3/300/500', createdAt: '8h ago', viewedBy: ['u1', 'u4'] },
+  { id: 's4', author: mockUsers[3], media: 'https://picsum.photos/seed/s4/300/500', createdAt: '12h ago', viewedBy: [] },
 ];
 
 export const mockOpportunities: Opportunity[] = [

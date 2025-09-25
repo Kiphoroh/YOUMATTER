@@ -2,12 +2,17 @@
 export interface User {
   id: string;
   name: string;
+  username: string;
+  password?: string; // Made optional for security reasons, won't be sent to client often
+  age: number;
+  phoneNumber: string;
   bio: string;
   avatar: string;
   interests: string[];
   role: 'user' | 'moderator' | 'admin';
   points: number;
   badges: string[];
+  isOnline?: boolean;
 }
 
 export enum PostCategory {
@@ -16,6 +21,7 @@ export enum PostCategory {
   Careers = 'Careers',
   Fun = 'Fun',
   Life = 'Life',
+  Challenge = 'Challenge',
 }
 
 export interface Comment {
@@ -33,10 +39,12 @@ export interface Post {
   media?: string;
   category: PostCategory;
   likes: number;
+  likedBy: string[]; // Array of user IDs who liked the post
   comments: Comment[];
   shares: number;
   createdAt: string;
   isAnonymous: boolean;
+  viewedBy: string[]; // Array of user IDs who viewed the post
 }
 
 export interface Story {
@@ -44,6 +52,7 @@ export interface Story {
   author: User;
   media: string;
   createdAt: string;
+  viewedBy: string[]; // Array of user IDs who viewed the story
 }
 
 export interface Opportunity {
@@ -77,4 +86,31 @@ export interface Report {
   reportedBy: User;
   reason: string;
   status: 'pending' | 'resolved' | 'dismissed';
+}
+
+export interface ChatMessage {
+  id: string;
+  sender: User;
+  content: string;
+  createdAt: string;
+  sharedPostId?: string;
+  storyReply?: {
+    authorName: string;
+    media: string;
+  };
+}
+
+export interface Conversation {
+  id: string;
+  type: 'private' | 'group';
+  participants: User[];
+  messages: ChatMessage[];
+  name?: string; // For group chats
+  lastMessage?: ChatMessage;
+}
+
+export interface Resource {
+    title: string;
+    description: string;
+    category: string;
 }

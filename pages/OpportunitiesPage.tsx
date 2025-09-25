@@ -1,10 +1,11 @@
+
 import React from 'react';
-import { mockOpportunities } from '../data/mockData';
 import { Opportunity } from '../types';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Avatar } from '../components/ui/Avatar';
 import { BriefcaseIcon } from '../constants';
+import { useData } from '../hooks/useData';
 
 const OpportunityCard: React.FC<{ opportunity: Opportunity }> = ({ opportunity }) => {
     const typeColors = {
@@ -37,6 +38,8 @@ const OpportunityCard: React.FC<{ opportunity: Opportunity }> = ({ opportunity }
 };
 
 export const OpportunitiesPage: React.FC = () => {
+  const { opportunities } = useData();
+
   return (
     <div className="container mx-auto px-4 pt-6">
         <div className="text-center mb-8">
@@ -46,7 +49,7 @@ export const OpportunitiesPage: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-            {mockOpportunities.map(op => (
+            {opportunities.map(op => (
                 <OpportunityCard key={op.id} opportunity={op} />
             ))}
         </div>
